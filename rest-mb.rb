@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 
 # rest-mb.rb - Lightweight restfull webserver for serving mandelbrot
 # images
@@ -64,7 +64,7 @@ def index
 end
 
 reg = /mandel-\w*.png/
-webserver = TCPServer.new('127.0.0.1', 8080)
+webserver = TCPServer.new('', 80)
 while (@session = webserver.accept)
    @session.print "HTTP/1.1 200/OK\r\nContent-type:text/html\r\n\r\n"
    request = @session.gets
@@ -89,7 +89,7 @@ while (@session = webserver.accept)
          end
          if queryParams
             random_string = SecureRandom.hex
-   	     `python2 mandelbrot.py #{params["w"]} #{params["h"]} #{params["it"]} #{random_string}`
+   	     `python mandelbrot.py #{params["w"]} #{params["h"]} #{params["it"]} #{random_string}`
             @session.print(%Q+<img src="mandel-#{random_string}.png">+)
          else
             @session.print "404 Not Found"
@@ -102,4 +102,5 @@ while (@session = webserver.accept)
    end
    @session.close
 end
+
 
